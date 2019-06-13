@@ -11,3 +11,16 @@ F:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\TP9\TP9\obj\Debug\TP9.csprojA
 F:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\TP9\TP9\obj\Debug\TP9.csproj.CoreCompileInputs.cache
 F:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\TP9\TP9\obj\Debug\TP9.exe
 F:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\TP9\TP9\obj\Debug\TP9.pdb
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.exe.config
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.exe
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.pdb
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.exe
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.pdb
+E:\Taller de lenguajes 1\Taller de Lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.csprojResolveAssemblyReference.cache
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.exe.config
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.exe
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\bin\Debug\TP9.pdb
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.csprojAssemblyReference.cache
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.csproj.CoreCompileInputs.cache
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.exe
+F:\Taller de lenguajes 1\TP9\tp-nro9-BorisAsen\TP9\TP9\obj\Debug\TP9.pdb

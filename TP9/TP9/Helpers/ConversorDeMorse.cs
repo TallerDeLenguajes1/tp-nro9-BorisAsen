@@ -9,7 +9,7 @@ namespace Helpers
 {
     class ConversorDeMorse
     {
-        public static string[] morse = { " ", ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
+        public static string[] morse = { " ", ".- ", "-... ", "-.-. ", "-.. ", ". ", "..-. ", "--. ", ".... ", ".. ", ".--- ", "-.- ", ".-.. ", "-- ", "-. ", "--- ", ".--. ", "--.- ", ".-. ", "... ", "- ", "..- ", "...- ", ".-- ", "-..- ", "-.-- ", "--.. " };
         public static char[] letras = { ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
         //public static char[] letras = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -47,7 +47,7 @@ namespace Helpers
             return traducido;
         }
 
-        public static void CrearMorseTxt(string[] morse, string destDirectory)
+        public static string CrearMorseTxt(string[] morse, string destDirectory)
         {
             string morseDirectory = destDirectory + @"\Morse";
             if (!Directory.Exists(morseDirectory))
@@ -55,7 +55,8 @@ namespace Helpers
                 Directory.CreateDirectory(morseDirectory);
             }
 
-            string morseFileName = morseDirectory+@"\morse_" + DateTime.Now.ToString("dd_MM_yyyy_h_m_s") + ".txt";
+            string fecha = DateTime.Now.ToString("dd_MM_yyyy_h_m_s");
+            string morseFileName = morseDirectory+@"\morse_" + fecha + ".txt";
 
             FileStream morseFile = File.Create(morseFileName);
             using (StreamWriter morseWriter = new StreamWriter(morseFile))
@@ -66,18 +67,19 @@ namespace Helpers
                 }
                 morseWriter.Close();
             }
+
+            return fecha;
         }
 
-        public static void CrearTextoTxt(string destDirectory)
+        public static void CrearTextoTxt(string destDirectory, string fecha)
         {
             string textDirectory = destDirectory + @"\Morse";
             if (!Directory.Exists(textDirectory))
             {
                 Directory.CreateDirectory(textDirectory);
             }
-            string textFileName = textDirectory + @"\texto_" + DateTime.Now.ToString("dd_MM_yyyy_h_m_s") + ".txt";
-            string morseFileName = textDirectory + @"\morse_" + DateTime.Now.ToString("dd_MM_yyyy_h_m_s") + ".txt";
-
+            string textFileName = textDirectory + @"\texto_" + fecha + ".txt";
+            string morseFileName = textDirectory + @"\morse_" + fecha + ".txt";
 
             FileStream toConvert = new FileStream(morseFileName, FileMode.Open);
             string line;
@@ -90,7 +92,7 @@ namespace Helpers
                 }
             }
             string[] morseArray = morseContent.Split(';');
-            string MorseToText = ConversorDeMorse.MorseATexto(morseArray);
+            string MorseToText = MorseATexto(morseArray);
 
             FileStream textFile = File.Create(textFileName);
             using (StreamWriter textWriter = new StreamWriter(textFile))
@@ -98,6 +100,88 @@ namespace Helpers
                 textWriter.WriteLine(MorseToText);
                 textWriter.Close();
             }
+        }
+
+        public static byte[] FullBinaryReader(Stream stream)
+        {
+            byte[] buffer = new byte[32768];
+            using (MemoryStream ms = new MemoryStream()) 
+            {
+                while (true)
+                {
+                    int read = stream.Read(buffer, 0, buffer.Length);
+                    if (read <= 0)
+                        return ms.ToArray();
+                    ms.Write(buffer, 0, read);
+                }
+            }
+        }
+
+        public static void MorseToMp3(string[] toConvert, string destDirectory, string fecha)
+        {
+            //Establezco el directorio de destino y el nombre del mp3 de salida 
+            string directory = destDirectory + @"\Morse";
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            //Obtengo las rutas de los archivos de entrada y salida
+            string mp3FileName = directory + @"\audio_" + fecha + ".mp3";
+            string puntoPath = destDirectory + @"\punto.mp3";
+            string rayaPath = destDirectory + @"\raya.mp3";
+            string silencioPath = destDirectory + @"\silencio.mp3";
+
+            //Convierto el arreglo de string de entrada a string 
+            string result = String.Concat(toConvert);
+
+            //Convierto el string a un arreglo de caracteres para analizarlo caracter a caracter
+            char[] charMorse = result.ToArray();
+
+            //Abro los archivos de entrada para lectura
+            Stream punto = File.OpenRead(puntoPath);
+            Stream raya = File.OpenRead(rayaPath);
+            Stream silencio = File.OpenRead(silencioPath);
+
+            //Creo arrays de bytes para guardar el contenido de los archivos de audio
+            byte[] puntoBuffer;
+            byte[] rayaBuffer;
+            byte[] silencioBuffer;
+
+            //Cargo el contenido de los archivos mp3 en los buffer correspondientes
+            puntoBuffer = FullBinaryReader(punto);
+            punto.Close();
+            rayaBuffer = FullBinaryReader(raya);
+            raya.Close();
+            silencioBuffer = FullBinaryReader(silencio);
+            silencio.Close();
+
+            //Creo el objeto FileStream para depositar todo el audio concatenado
+            FileStream mp3File = new FileStream(mp3FileName,FileMode.Create);
+            //Stream mp3File = File.OpenWrite(mp3FileName);
+
+            //Analizo cada caracter del arreglo de caracteres y asigno el sonido que corresponda
+            foreach (char c in charMorse)
+            {
+                if (c == '.')
+                {
+                    //punto.CopyTo(mp3File);
+                    mp3File.Write(puntoBuffer, 0, puntoBuffer.Length);
+                }
+
+                if (c == '-')
+                {
+                    //raya.CopyTo(mp3File);
+                    mp3File.Write(rayaBuffer, 0, rayaBuffer.Length);
+                }
+
+                if (c == ' ')
+                {
+                    //silencio.CopyTo(mp3File);
+                    mp3File.Write(silencioBuffer, 0, silencioBuffer.Length);
+                }
+            }
+            mp3File.Close();
         }
 
         //public static void MorseToMp3(string[] toConvert, string destDirectory)
@@ -109,45 +193,54 @@ namespace Helpers
         //    }
         //    string mp3FileName = directory + @"\audio_" + DateTime.Now.ToString("dd_MM_yyyy_h_m_s") + ".mp3";
 
-        //    //Cargo el punto en un byte
-        //    byte puntoMp3;
+        //    string result = String.Concat(toConvert);
+        //    char[] charMorse = result.ToArray();
+        //    //Console.WriteLine("string impreso: "+result);
+
         //    string puntoPath = destDirectory + @"\punto.mp3";
-        //    FileStream punto = new FileStream(puntoPath, FileMode.Open);
-        //    using (StreamReader puntoReader = new StreamReader(punto))
-        //    {
-        //        puntoMp3 = Convert.ToByte( puntoReader.ReadLine() );
-        //    }
-
-        //    //Cargo la raya en un byte
-        //    byte rayaMp3;
         //    string rayaPath = destDirectory + @"\raya.mp3";
-        //    FileStream raya = new FileStream(rayaPath, FileMode.Open);
-        //    using (StreamReader rayaReader = new StreamReader(raya))
-        //    {
-        //        rayaMp3 = Convert.ToByte(rayaReader.ReadLine());
-        //    }
+        //    string silencioPath = destDirectory + @"\silencio.mp3";
 
-        //    //Convierto el arreglo  de entrada (donde cada elemento contiene una letra en morse) a un string concatenado
-        //    string stringToMp3="";
-        //    int i = 0;
-        //    while (i<= toConvert.Length)
-        //    {
-        //        stringToMp3 = stringToMp3 + toConvert[i];
-        //        i++;
-        //    }
+        //    Stream mp3File = File.OpenWrite(mp3FileName);
+        //    Stream punto = File.OpenRead(puntoPath);
+        //    Stream raya = File.OpenRead(rayaPath);
+        //    Stream silencio = File.OpenRead(silencioPath);
 
-            //Guardo el string en el mp3
-            //FileStream mp3File = File.Create(mp3FileName);
-            //using (StreamWriter textWriter = new StreamWriter(mp3File))
-            //{
-            //    textWriter.WriteLine(MorseToText);
-            //    textWriter.Close();
-            //}
-            //int j = 0;
-            //while (j <= stringToMp3.Length)
-            //{
+        //    ////Console.WriteLine("char[] impreso: " + result);
+        //    //foreach (char c in charMorse)
+        //    //{
+        //    //    if (c=='.')
+        //    //    {
+        //    //        punto.CopyTo(mp3File);
+        //    //    }
 
-            //}
+        //    //    if (c == '-')
+        //    //    {
+        //    //        raya.CopyTo(mp3File);
+        //    //    }
+
+        //    //    //if (c == ' ')
+        //    //    //{
+        //    //    //    silencio.CopyTo(mp3File);
+        //    //    //}
+        //    //    Console.Write(c);
+        //    //}
+
+        //    punto.CopyTo(mp3File);
+
+        //    punto.CopyTo(mp3File);
+
+        //    punto.CopyTo(mp3File);
+
+        //    punto.CopyTo(mp3File);
+
+
+        //    punto.Close();
+        //    raya.Close();
+        //    silencio.Close();
+        //    mp3File.Flush();
+        //    mp3File.Close();
+
         //}
     }
 }

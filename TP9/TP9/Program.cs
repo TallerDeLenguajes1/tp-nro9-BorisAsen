@@ -22,11 +22,11 @@ namespace TP9
 
             //*********************** TEXTO A MORSE ***********************//
             string[] TextToMorse = ConversorDeMorse.TextoAMorse(aTraducir.ToUpper());
-            ConversorDeMorse.CrearMorseTxt(TextToMorse,DataDirectory);
-            //ConversorDeMorse.MorseToMp3(TextToMorse, DataDirectory);
+            string fecha =ConversorDeMorse.CrearMorseTxt(TextToMorse,DataDirectory);
+            ConversorDeMorse.MorseToMp3(TextToMorse, DataDirectory, fecha);
 
             //*********************** MORSE A TEXTO ***********************//
-            ConversorDeMorse.CrearTextoTxt(DataDirectory);
+            ConversorDeMorse.CrearTextoTxt(DataDirectory, fecha);
             
 
             Console.WriteLine("\nLas corrspondientes traducciones se guardaron dentro del directorio "+DataDirectory);
